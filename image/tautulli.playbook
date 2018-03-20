@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+    - get_url:
+        url:      "https://github.com/Tautulli/Tautulli/archive/{{ ansible_env.TAUTULLI_VERSION }}.tar.gz"
+        dest:     "/usr/local/src/tautulli-{{ ansible_env.TAUTULLI_VERSION }}.tar.gz"
+        checksum: "sha256:{{ ansible_env.TAUTULLI_SHA256 }}"
+    - file:
+        path:  "/usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }}"
+        state: "directory"
+    - command: "tar --extract --gzip --file=/usr/local/src/tautulli-{{ ansible_env.TAUTULLI_VERSION }}.tar.gz --strip-components=1 --directory /usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }}"
+      args:
+        creates: "/usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }}/Tautulli.py"
+        warn:    "no"
+    - command: "{{ item }}"
+      with_items:
+        - "find /usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }} -type f -exec chmod 644 '{}' {{ '\' }};"
+        - "find /usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }} -type d -exec chmod 755 '{}' {{ '\' }};"

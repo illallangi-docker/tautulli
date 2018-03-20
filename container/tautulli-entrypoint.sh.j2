@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+/usr/bin/python /usr/lib/tautulli-{{ ansible_env.TAUTULLI_VERSION }}/Tautulli.py --datadir={{ ansible_env.TAUTULLI_CONFIG | default('/var/lib/' + (ansible_env.USER | default('docker')) + '/.config/tautulli') }} --nolaunch
